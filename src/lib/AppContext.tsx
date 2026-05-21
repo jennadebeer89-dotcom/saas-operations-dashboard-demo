@@ -49,33 +49,31 @@ interface StoredPrefs {
   darkMode?: boolean;
 }
 
+function readPrefs(): StoredPrefs {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as StoredPrefs) : {};
+  } catch {
+    return {};
+  }
+}
+
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [role, setRole] = useState<Role>("admin");
-  const [theme, setTheme] = useState<ThemeKey>("generic");
-  const [darkMode, setDarkMode] = useState<boolean>(false);
+  const [role, setRole] = useState<Role>(() => readPrefs().role ?? "admin");
+  const [theme, setTheme] = useState<ThemeKey>(() => readPrefs().theme ?? "generic");
+  const [darkMode, setDarkMode] = useState<boolean>(() => readPrefs().darkMode ?? false);
   const [data, setData] = useState<Dataset>(initialDataset);
-  const [loaded, setLoaded] = useState(false);
+  const loaded = true;
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const prefs: StoredPrefs = JSON.parse(raw);
-        if (prefs.role) setRole(prefs.role);
-        if (prefs.theme) setTheme(prefs.theme);
-        if (typeof prefs.darkMode === "boolean") setDarkMode(prefs.darkMode);
-      }
-    } catch {
-      // ignore corrupt prefs
-    }
-    setLoaded(true);
-  }, []);
-
-  useEffect(() => {
-    if (!loaded) return;
     const prefs: StoredPrefs = { role, theme, darkMode };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
-  }, [role, theme, darkMode, loaded]);
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+    } catch {
+      // ignore quota or privacy-mode errors
+    }
+  }, [role, theme, darkMode]);
 
   useEffect(() => {
     const root = document.documentElement;
