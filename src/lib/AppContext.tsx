@@ -60,20 +60,35 @@ function readPrefs(): StoredPrefs {
 }
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [role, setRole] = useState<Role>(() => readPrefs().role ?? "admin");
-  const [theme, setTheme] = useState<ThemeKey>(() => readPrefs().theme ?? "generic");
-  const [darkMode, setDarkMode] = useState<boolean>(() => readPrefs().darkMode ?? false);
+  // Render SSR-safe defaults on first paint; rehydrate from localStorage after mount.
+  // This avoids hydration mismatch on the initial render.
+  const [role, setRole] = useState<Role>("admin");
+  const [theme, setTheme] = useState<ThemeKey>("generic");
+  const [darkMode, setDarkMode] = useState<boolean>(false);
   const [data, setData] = useState<Dataset>(initialDataset);
-  const loaded = true;
+  const [hydrated, setHydrated] = useState(false);
+
+  // One-time hydration from persisted prefs. setState in effect is correct here
+  // (no cascade — runs once on mount), so we silence the new strict rule.
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    const prefs = readPrefs();
+    if (prefs.role) setRole(prefs.role);
+    if (prefs.theme) setTheme(prefs.theme);
+    if (typeof prefs.darkMode === "boolean") setDarkMode(prefs.darkMode);
+    setHydrated(true);
+  }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   useEffect(() => {
+    if (!hydrated) return;
     const prefs: StoredPrefs = { role, theme, darkMode };
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
     } catch {
       // ignore quota or privacy-mode errors
     }
-  }, [role, theme, darkMode]);
+  }, [role, theme, darkMode, hydrated]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -151,9 +166,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       data,
       setBookingStatus,
       sendMessage,
-      loaded,
+      loaded: hydrated,
     }),
-    [role, theme, darkMode, data, setBookingStatus, sendMessage, toggleDarkMode, loaded],
+    [role, theme, darkMode, data, setBookingStatus, sendMessage, toggleDarkMode, hydrated],
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
