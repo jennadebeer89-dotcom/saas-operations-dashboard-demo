@@ -13,16 +13,21 @@ export function formatCurrencyDetailed(amount: number) {
   }).format(amount);
 }
 
+// Hydration-safe: parse the ISO directly so server (UTC) and client (local TZ)
+// produce identical output. The demo treats stored times as wall-clock UTC.
 export function formatTime(iso?: string) {
   if (!iso) return "—";
-  const d = new Date(iso);
-  return d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+  return iso.slice(11, 16);
 }
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export function formatDate(iso?: string) {
   if (!iso) return "—";
-  const d = new Date(iso);
-  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+  const [y, m, d] = iso.slice(0, 10).split("-");
+  const day = parseInt(d, 10);
+  const month = MONTHS[parseInt(m, 10) - 1] ?? "";
+  return `${day} ${month} ${y}`;
 }
 
 export function formatRelative(iso: string) {
