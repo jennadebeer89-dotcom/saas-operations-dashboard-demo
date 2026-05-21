@@ -1,5 +1,10 @@
 # SaaS Operations Dashboard — Demo
 
+[![CI](https://github.com/jennadebeer89-dotcom/saas-operations-dashboard-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/jennadebeer89-dotcom/saas-operations-dashboard-demo/actions/workflows/ci.yml)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+
 A public demo dashboard inspired by real-world SaaS operations software. Built with **Next.js, React and TypeScript**, featuring **role-based views**, a **check-in / check-out workflow**, **messaging**, and **operational reporting**. Mock data only — safe to share.
 
 > **Live demo:** <https://saas-operations-dashboard-demo.vercel.app>
@@ -120,42 +125,56 @@ npm run build      # Production build
 npm start          # Run production build
 ```
 
+## Running tests
+
+The project uses **Vitest** + **React Testing Library** + **jsdom**.
+
+```bash
+npm test           # run the full suite once
+npm run test:watch # interactive watch mode
+```
+
+Coverage focuses on the most user-facing behaviour:
+
+- Dashboard renders the operations overview and KPI tiles
+- Role switcher changes the visible content for `admin` / `staff` / `client`
+- Check-in / check-out advances booking status and supports undo
+- Messaging inbox opens a thread and appends a sent reply to state
+- `EmptyState` renders title, description, and an optional action
+- `format` helpers (currency, date, time, percent change) are timezone-safe
+
+Tests run on every push and PR via GitHub Actions (`.github/workflows/ci.yml`).
+
 ## Privacy and data
 
-**This is a public demo project.** It uses mock data only and does **not** include:
+This is a public demo project using fictional data only. It does not include real client data, production code, business rules, payment data, screenshots, credentials, or private system details.
 
-- real client or customer data
-- real payment data
-- authentication secrets or API keys
-- production business logic
-- any private screenshots or database details
-
-All names, emails, phone numbers, and figures are fictional. No external services are called.
+All names, emails, phone numbers, and figures are fabricated. No external services are called, no analytics are loaded, and no API keys or secrets are bundled into the repo.
 
 ## Limitations and future work
 
-This is intentionally a UI demo, not a production app. Things deliberately left out:
+This is intentionally a UI demo, not a production app. Things deliberately left out — each is straightforward to add later:
 
-- Real authentication (NextAuth, Clerk, etc.)
-- A real database (would swap mock data layer for Drizzle/Prisma + Postgres)
-- Payment integration (Stripe Checkout, Connect, Billing Portal)
-- Real-time updates (would use Pusher / Ably / SSE)
-- Server-side data fetching (currently all client-side from mock state)
-- Tests (Vitest + React Testing Library would cover the workflow state machine first)
-
-Each of these is straightforward to add — they were skipped to keep the repo focused on the UI and product thinking.
+- **Real authentication** — currently a mock role switcher; would integrate with NextAuth / Clerk / Auth.js
+- **Persistent database** — mock data lives in memory; would swap for Drizzle/Prisma + Postgres
+- **Backend API integration** — pages call client-side mock helpers; would split into Server Actions / Route Handlers / tRPC
+- **Stripe / payment integration** — payment status is decorative; would wire Checkout, Connect, and the Billing Portal
+- **Notification system** — no email/SMS/push; would integrate Resend / Twilio / web push
+- **Production observability** — no Sentry, no logging, no metrics; would add error reporting and product analytics
+- **Role-based access control** — role gating happens client-side for demo purposes; real RBAC must be enforced server-side
 
 ## What this demonstrates
 
 - React + Next.js App Router with client components and persisted state
-- TypeScript end-to-end, including typed mock data layer and shared types
+- TypeScript end-to-end, including a typed mock data layer and shared domain types
 - Tailwind v4 design system using CSS custom properties for theming and dark mode
 - Reusable UI primitives (`Card`, `Badge`, `Button`, `EmptyState`, `Skeleton`)
 - Stateful UI patterns: state machine for booking status, optimistic updates, activity feed
 - Multi-tenant / multi-role thinking — same codebase, different views per role
 - Configuration-driven theming — same components, different industry skin
 - Accessibility basics: `aria-label`, `role="radiogroup"`, focus rings, keyboard send
-- CI hygiene: GitHub Actions running lint, typecheck, and build on every change
+- Testing discipline: Vitest + React Testing Library covering the dashboard, role switcher, check-in workflow, messaging, and shared helpers
+- CI hygiene: GitHub Actions running lint, typecheck, test, and build on every change
 
 ## License
 
