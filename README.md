@@ -2,7 +2,7 @@
 
 A public demo dashboard inspired by real-world SaaS operations software. Built with **Next.js, React and TypeScript**, featuring **role-based views**, a **check-in / check-out workflow**, **messaging**, and **operational reporting**. Mock data only — safe to share.
 
-> **Live demo:** _[add Vercel link after deploy]_
+> **Live demo:** <https://saas-operations-dashboard-demo.vercel.app>
 >
 > **Switchable themes:** the same code base ships with two demo skins — a generic SaaS view and a pet-care view — toggled live from the top bar. This is intentional: the same dashboard layout fits many industries (services, appointments, daycare, clinics, studios).
 
@@ -62,16 +62,43 @@ This pattern — explicit state transitions, audit trail, role-aware actions —
 
 ## Screenshots
 
-_To be added after first deploy._
+### Dashboard — light
 
-```
-public/screenshots/
-├── dashboard-light.png
-├── dashboard-dark.png
-├── check-in.png
-├── messages.png
-└── reports.png
-```
+![Dashboard light](./public/screenshots/dashboard-light.png)
+
+### Dashboard — dark
+
+![Dashboard dark](./public/screenshots/dashboard-dark.png)
+
+### Check-in / check-out workflow
+
+![Check-in workflow](./public/screenshots/check-in.png)
+
+### Bookings table
+
+![Bookings](./public/screenshots/bookings.png)
+
+### Messaging inbox
+
+![Messages](./public/screenshots/messages.png)
+
+### Reports
+
+![Reports](./public/screenshots/reports.png)
+
+### Pet Care theme variant
+
+The same dashboard, re-skinned via the in-app theme switcher.
+
+![Dashboard pet care](./public/screenshots/dashboard-petcare.png)
+
+### Mobile
+
+<p>
+  <img src="./public/screenshots/mobile-dashboard.png" alt="Mobile dashboard" width="320" />
+  &nbsp;
+  <img src="./public/screenshots/mobile-check-in.png" alt="Mobile check-in" width="320" />
+</p>
 
 ## Running locally
 
