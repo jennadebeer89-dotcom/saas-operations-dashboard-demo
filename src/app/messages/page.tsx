@@ -5,7 +5,8 @@ import { Send, Inbox } from "lucide-react";
 import { useApp } from "@/lib/AppContext";
 import { Card } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { formatRelative, formatTime } from "@/lib/format";
+import { formatTime } from "@/lib/format";
+import { RelativeTime } from "@/components/ui/RelativeTime";
 import { clsx } from "clsx";
 
 export default function MessagesPage() {
@@ -126,7 +127,7 @@ export default function MessagesPage() {
                                 mine ? "opacity-75" : "text-[var(--color-text-muted)]",
                               )}
                             >
-                              {formatTime(m.at)} · {formatRelative(m.at)}
+                              {formatTime(m.at)} · <RelativeTime iso={m.at} />
                             </div>
                           </div>
                         </li>

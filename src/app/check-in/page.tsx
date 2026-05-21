@@ -7,12 +7,13 @@ import { Card, CardHeader, CardBody } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { formatRelative, formatTime } from "@/lib/format";
-import type { BookingStatus } from "@/data/mockData";
+import { formatTime } from "@/lib/format";
+import { RelativeTime } from "@/components/ui/RelativeTime";
+import { DEMO_TODAY, type BookingStatus } from "@/data/mockData";
 
 export default function CheckInPage() {
   const { labels, data, setBookingStatus, role } = useApp();
-  const todayIso = new Date().toISOString().slice(0, 10);
+  const todayIso = DEMO_TODAY;
 
   const todays = useMemo(
     () => data.bookings.filter((b) => b.date === todayIso),
@@ -162,7 +163,7 @@ export default function CheckInPage() {
                       <span className="text-[var(--color-text-muted)]"> — {a.detail}</span>
                     </div>
                     <div className="mt-0.5 text-xs text-[var(--color-text-muted)]">
-                      {a.actor} · {formatRelative(a.at)}
+                      {a.actor} · <RelativeTime iso={a.at} />
                     </div>
                   </div>
                 </li>

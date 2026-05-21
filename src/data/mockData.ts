@@ -75,15 +75,18 @@ export interface Dataset {
   };
 }
 
-const today = new Date();
+// Fixed reference date so SSR and client hydration produce identical output.
+// Update this constant occasionally to keep the demo looking "today-ish".
+export const DEMO_TODAY = "2026-05-21";
+
 const isoOf = (offsetDays = 0, h = 9, m = 0) => {
-  const d = new Date(today);
-  d.setDate(d.getDate() + offsetDays);
-  d.setHours(h, m, 0, 0);
+  const d = new Date(`${DEMO_TODAY}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + offsetDays);
+  d.setUTCHours(h, m, 0, 0);
   return d.toISOString();
 };
 
-const todayDate = isoOf(0).slice(0, 10);
+const todayDate = DEMO_TODAY;
 
 export const customers: Customer[] = [
   { id: "c1", name: "Aria Bennett", email: "aria.bennett@example.com", phone: "+44 7700 900111", joinedAt: "2024-03-12", plan: "pro" },

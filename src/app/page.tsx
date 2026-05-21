@@ -12,11 +12,13 @@ import { useApp } from "@/lib/AppContext";
 import { KpiCard } from "@/components/dashboard/KpiCard";
 import { Card, CardBody, CardHeader } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
-import { formatCurrency, formatRelative, formatTime, percentChange } from "@/lib/format";
+import { formatCurrency, formatTime, percentChange } from "@/lib/format";
+import { RelativeTime } from "@/components/ui/RelativeTime";
+import { DEMO_TODAY } from "@/data/mockData";
 
 export default function DashboardPage() {
   const { role, labels, data } = useApp();
-  const todayIso = new Date().toISOString().slice(0, 10);
+  const todayIso = DEMO_TODAY;
 
   const todays = data.bookings.filter((b) => b.date === todayIso);
   const checkedIn = todays.filter((b) => b.status === "checked_in").length;
@@ -133,7 +135,7 @@ export default function DashboardPage() {
                       <span className="text-[var(--color-text-muted)]"> — {a.detail}</span>
                     </div>
                     <div className="mt-0.5 text-xs text-[var(--color-text-muted)]">
-                      {a.actor} · {formatRelative(a.at)}
+                      {a.actor} · <RelativeTime iso={a.at} />
                     </div>
                   </div>
                 </li>
